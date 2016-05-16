@@ -148,8 +148,9 @@ function CASAuthentication(options) {
     var parsed_cas_url   = url.parse(this.cas_url);
     this.request_client  = parsed_cas_url.protocol === 'http:' ? http : https;
     this.cas_host        = parsed_cas_url.hostname;
-    this.cas_port        = parsed_cas_url.protocol === 'http:' ? 80 : 443;
-    this.cas_path        = parsed_cas_url.pathname;
+    this.cas_port        = options.cas_port || parsed_cas_url.port;
+    this.cas_path        = parsed_cas_url.pathname ? parsed_cas_url.pathname : '';
+    this.cas_return_to   = options.cas_return_to ? options.cas_return_to : '/';
 
     this.service_url     = options.service_url;
 
@@ -267,7 +268,7 @@ CASAuthentication.prototype.logout = function(req, res, next) {
 
     // Destroy the entire session if the option is set.
     if (this.destroy_session) {
-        req.session.destroy(function(err) {
+        req.session.destroyall(function(err) {
             if (err) {
                 console.log(err);
             }
@@ -291,14 +292,17 @@ CASAuthentication.prototype.logout = function(req, res, next) {
 CASAuthentication.prototype._handleTicket = function(req, res, next) {
 
     var requestOptions = {
-        host: this.cas_host,
-        port: this.cas_port,
+        host: this.cas_host
     };
+
+    if (this.cas_port) {
+        requestOptions.port = this.cas_port;
+    }
 
     if (['1.0', '2.0', '3.0'].indexOf(this.cas_version) >= 0){
         requestOptions.method = 'GET';
         requestOptions.path = url.format({
-            pathname: this.cas_path + this._validateUri,
+            pathname: (this.cas_path === '/' ? '' : this.cas_path) + this._validateUri,
             query: {
                 service: this.service_url + url.parse(req.url).pathname,
                 ticket: req.query.ticket
@@ -323,7 +327,7 @@ CASAuthentication.prototype._handleTicket = function(req, res, next) {
 
         requestOptions.method = 'POST';
         requestOptions.path = url.format({
-            pathname: this.cas_path + this._validateUri,
+            pathname: (this.cas_path === '/' ? '' : this.cas_path) + this._validateUri,
             query : {
                 TARGET : this.service_url + url.parse(req.url).pathname,
                 ticket: ''
@@ -348,11 +352,20 @@ CASAuthentication.prototype._handleTicket = function(req, res, next) {
                     res.sendStatus(401);
                 }
                 else {
-                    req.session[ this.session_name ] = user;
-                    if (this.session_info) {
-                        req.session[ this.session_info ] = attributes || {};
-                    }
-                    res.redirect(req.session.cas_return_to);
+                    req.session.upgrade && req.session.upgrade(user, function (err) {
+                        if (err) {
+                            console.log(err);
+                            res.send({'message': 'upgrade user error!'});
+                        }
+
+                        req.session[ this.session_name ] = user;
+
+                        if (this.session_info) {
+                            req.session[ this.session_info ] = attributes || {};
+                        }
+
+                        res.redirect(req.session.cas_return_to || this.cas_return_to);
+                    }.bind(this));
                 }
             }.bind(this));
         }.bind(this));

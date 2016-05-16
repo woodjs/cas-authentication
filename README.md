@@ -1,4 +1,4 @@
-# Express CAS Authentication
+# CAS Authentication, rely on express and connect-redis-sessions
 
 This is a CAS authentication library designed to be used with an Express server.
 
@@ -14,17 +14,19 @@ It also provides two route endpoint functions:
 
 ## Installation
 
-    npm install cas-authentication
+    npm install cas-authentication-sc
 
 ## Setup
 
 ```javascript
-var CASAuthentication = require('cas-authentication');
+var CASAuthentication = require('cas-authentication-sc');
 
 var cas = new CASAuthentication({
     cas_url         : 'https://my-cas-host.com/cas',
     service_url     : 'https://my-service-host.com',
     cas_version     : '3.0',
+    cas_port        : 8080,
+    cas_return_to   : '/login',
     renew           : false,
     is_dev_mode     : false,
     dev_mode_user   : '',
@@ -55,7 +57,7 @@ var cas = new CASAuthentication({
 ```javascript
 var app = require('express')();
 var session = require('express-session');
-var CASAuthentication = require('cas-authentication');
+var CASAuthentication = require('cas-authentication-sc');
 
 // Set up an Express session, which is required for CASAuthentication.
 app.use( session({
