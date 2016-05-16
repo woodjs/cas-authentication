@@ -1,7 +1,7 @@
 {
-  "name": "cas-authentication",
-  "version": "0.0.8",
-  "description": "A CAS authentication library designed to be used as middleware for an Express server.",
+  "name": "cas-authentication-sc",
+  "version": "0.0.1",
+  "description": "A CAS authentication library rely on express and connect-redis-sessions",
   "keywords": [
     "cas",
     "central authentication service",
@@ -10,18 +10,19 @@
     "authentication",
     "login",
     "middleware",
-    "express"
+    "express", 
+    "connect-redis-sessions"
   ],
-  "homepage": "https://github.com/kylepixel/cas-authentication",
+  "homepage": "https://github.com/woodjs/cas-authentication",
   "bugs": {
-    "url": "https://github.com/kylepixel/cas-authentication/issues"
+    "url": "https://github.com/woodjs/cas-authentication/issues"
   },
   "license": "MIT",
   "author": "Kyle Maguire <kylepixel@gmail.com>",
   "main": "index.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/kylepixel/cas-authentication.git"
+    "url": "https://github.com/woodjs/cas-authentication.git"
   },
   "dependencies": {
     "xml2js": "^0.4.8"
