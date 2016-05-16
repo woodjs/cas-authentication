@@ -1,6 +1,6 @@
 {
   "name": "cas-authentication-sc",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "A CAS authentication library rely on express and connect-redis-sessions",
   "keywords": [
     "cas",
@@ -10,7 +10,7 @@
     "authentication",
     "login",
     "middleware",
-    "express", 
+    "express",
     "connect-redis-sessions"
   ],
   "homepage": "https://github.com/woodjs/cas-authentication",
@@ -22,7 +22,7 @@
   "main": "index.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/woodjs/cas-authentication.git"
+    "url": "git+https://github.com/woodjs/cas-authentication.git"
   },
   "dependencies": {
     "xml2js": "^0.4.8"
@@ -30,5 +30,8 @@
   "devDependencies": {
     "express": "^4.12.3",
     "express-session": "^1.11.1"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
   }
 }

@@ -216,7 +216,7 @@ CASAuthentication.prototype._handle = function (req, res, next, authType) {
     }
     // Otherwise, allow them through to their request.
     else if (authType === AUTH_TYPE.BOUNCE) {
-      this._login(req, res, next);
+      req.query && req.query.ticket ? this._handleTicket(req, res, next) : this._login(req, res, next);
     }
     else {
       next();
@@ -367,7 +367,7 @@ CASAuthentication.prototype._handleTicket = function (req, res, next) {
               req.session[this.session_info] = attributes || {};
             }
 
-            res.redirect(req.session.cas_return_to || this.cas_return_to);
+            res.redirect(this.cas_return_to || req.session.cas_return_to);
           }.bind(this));
         }
       }.bind(this));
