@@ -163,6 +163,7 @@ function CASAuthentication(options) {
   this.session_name = options.session_name !== undefined ? options.session_name : 'cas_user';
   this.session_info = ['2.0', '3.0', 'saml1.1'].indexOf(this.cas_version) >= 0 && options.session_info !== undefined ? options.session_info : false;
   this.destroy_session = options.destroy_session !== undefined ? !!options.destroy_session : false;
+  this.is_custom_session = options.is_custom_session || false;
 
   // Bind the prototype routing methods to this instance of CASAuthentication.
   this.bounce = this.bounce.bind(this);
@@ -355,7 +356,15 @@ CASAuthentication.prototype._handleTicket = function (req, res, next) {
           res.sendStatus(401);
         }
         else {
-          req.session.upgrade && req.session.upgrade(user, function (err) {
+          if (this.is_custom_session) {
+            var redirectUrl = this.cas_return_to || req.session.cas_return_to;
+
+            res.redirect(redirectUrl + '?username=' + user);
+
+            return;
+          }
+
+          req.session.upgrade(user, function (err) {
             if (err) {
               console.log(err);
               res.send({'message': 'upgrade user error!'});
