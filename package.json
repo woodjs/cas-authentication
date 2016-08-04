@@ -1,6 +1,6 @@
 {
   "name": "cas-authentication-sc",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "A CAS authentication library rely on express and connect-redis-sessions",
   "keywords": [
     "cas",

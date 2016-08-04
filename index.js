@@ -274,12 +274,16 @@ CASAuthentication.prototype._login = function (req, res, next) {
  */
 CASAuthentication.prototype.logout = function (req, res, next) {
 
+  var self = this;
+
   // Destroy the entire session if the option is set.
   if (this.destroy_session) {
-    req.session.destroyall(function (err) {
+    req.session.destroy(function (err) {
       if (err) {
         console.log(err);
       }
+
+      res.redirect(self.cas_url + '/logout');
     });
   }
   // Otherwise, just destroy the CAS session variables.
@@ -288,10 +292,9 @@ CASAuthentication.prototype.logout = function (req, res, next) {
     if (this.session_info) {
       delete req.session[this.session_info];
     }
-  }
 
-  // Redirect the client to the CAS logout.
-  res.redirect(this.cas_url + '/logout');
+    res.redirect(this.cas_url + '/logout');
+  }
 };
 
 /**
