@@ -154,6 +154,8 @@ function CASAuthentication(options) {
 
   this.service_url = options.service_url;
 
+  this.logout_url_suffix = options.logout_url_suffix || '';
+
   this.renew = options.renew !== undefined ? !!options.renew : false;
   this.isNeedRenew = options.isNeedRenew || false;
 
@@ -283,7 +285,7 @@ CASAuthentication.prototype.logout = function (req, res, next) {
         console.log(err);
       }
 
-      res.redirect(self.cas_url + '/logout');
+      res.redirect(self.cas_url + '/logout' + self.logout_url_suffix);
     });
   }
   // Otherwise, just destroy the CAS session variables.
