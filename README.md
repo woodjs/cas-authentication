@@ -22,18 +22,18 @@ It also provides two route endpoint functions:
 var CASAuthentication = require('cas-authentication-sc');
 
 var cas = new CASAuthentication({
-    cas_url         : 'https://my-cas-host.com/cas',
-    service_url     : 'https://my-service-host.com',
-    cas_version     : '3.0',
-    cas_port        : 8080,
-    cas_return_to   : '/login',
+    casUrl         : 'https://my-cas-host.com/cas',
+    serviceUrl     : 'https://my-service-host.com',
+    casVersion     : '3.0',
+    casPort        : 8080,
+    casReturnTo   : '/login',
     renew           : false,
-    is_dev_mode     : false,
-    dev_mode_user   : '',
-    dev_mode_info   : {},
-    session_name    : 'cas_user',
-    session_info    : 'cas_userinfo',
-    destroy_session : false
+    isDevMode     : false,
+    devModeUser   : '',
+    devModeInfo   : {},
+    sessionName    : 'cas_user',
+    sessionInfo    : 'cas_userinfo',
+    destroySession : false
 });
 ```
 
@@ -41,16 +41,16 @@ var cas = new CASAuthentication({
 
 | Name | Type | Description | Default |
 |:-----|:----:|:------------|:-------:|
-| cas_url | _string_ | The URL of the CAS server. | _(required)_ |
-| service_url | _string_ | The URL of the application which is registered with the CAS server as a valid service. | _(required)_ |
-| cas_version | _"1.0"\|"2.0\|"3.0"\|"saml1.1"_ | The CAS protocol version. | _"3.0"_ |
+| casUrl | _string_ | The URL of the CAS server. | _(required)_ |
+| serviceUrl | _string_ | The URL of the application which is registered with the CAS server as a valid service. | _(required)_ |
+| casVersion | _"1.0"\|"2.0\|"3.0"\|"saml1.1"_ | The CAS protocol version. | _"3.0"_ |
 | renew | _boolean_ | If true, an unauthenticated client will be required to login to the CAS system regardless of whether a single sign-on session exists. | _false_ |
-| is_dev_mode | _boolean_ | If true, no CAS authentication will be used and the session CAS variable will be set to whatever user is specified as _dev_mode_user_. | _false_ |
-| dev_mode_user | _string_ | The CAS user to use if dev mode is active. | _""_ |
-| dev_mode_info | _Object_ | The CAS user information to use if dev mode is active. | _{}_ |
-| session_name | _string_ | The name of the session variable that will store the CAS user once they are authenticated. | _"cas_user"_ |
-| session_info | _string_ | The name of the session variable that will store the CAS user information once they are authenticated. If set to false (or something that evaluates as false), the additional information supplied by the CAS will not be forwarded. This will not work with CAS 1.0, as it does not support additional user information. | _false_ |
-| destroy_session | _boolean_ | If true, the logout function will destroy the entire session upon CAS logout. Otherwise, it will only delete the session variable storing the CAS user. | _false_ |
+| isDevMode | _boolean_ | If true, no CAS authentication will be used and the session CAS variable will be set to whatever user is specified as _dev_mode_user_. | _false_ |
+| devModeUser | _string_ | The CAS user to use if dev mode is active. | _""_ |
+| devModeInfo | _Object_ | The CAS user information to use if dev mode is active. | _{}_ |
+| sessionName | _string_ | The name of the session variable that will store the CAS user once they are authenticated. | _"cas_user"_ |
+| sessionInfo | _string_ | The name of the session variable that will store the CAS user information once they are authenticated. If set to false (or something that evaluates as false), the additional information supplied by the CAS will not be forwarded. This will not work with CAS 1.0, as it does not support additional user information. | _false_ |
+| destroySession | _boolean_ | If true, the logout function will destroy the entire session upon CAS logout. Otherwise, it will only delete the session variable storing the CAS user. | _false_ |
 
 ## Usage
 
@@ -68,8 +68,8 @@ app.use( session({
 
 // Create a new instance of CASAuthentication.
 var cas = new CASAuthentication({
-    cas_url     : 'https://my-cas-host.com/cas',
-    service_url : 'https://my-service-host.com'
+    casUrl     : 'https://my-cas-host.com/cas',
+    serviceUrl : 'https://my-service-host.com'
 });
 
 // Unauthenticated clients will be redirected to the CAS login and then back to

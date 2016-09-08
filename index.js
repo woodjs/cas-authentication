@@ -37,14 +37,14 @@ function CASAuthentication(options) {
   if (!options || typeof options !== 'object') {
     throw new Error('CAS Authentication was not given a valid configuration object.');
   }
-  if (options.cas_url === undefined) {
+  if (options.casUrl === undefined) {
     throw new Error('CAS Authentication requires a cas_url parameter.');
   }
-  if (options.service_url === undefined) {
+  if (options.serviceUrl === undefined) {
     throw new Error('CAS Authentication requires a service_url parameter.');
   }
 
-  this.cas_version = options.cas_version !== undefined ? options.cas_version : '3.0';
+  this.cas_version = options.casVersion !== undefined ? options.casVersion : '3.0';
 
   if (this.cas_version === '1.0') {
     this._validateUri = '/validate';
@@ -144,29 +144,29 @@ function CASAuthentication(options) {
     throw new Error('The supplied CAS version ("' + this.cas_version + '") is not supported.');
   }
 
-  this.cas_url = options.cas_url;
+  this.cas_url = options.casUrl;
   var parsed_cas_url = url.parse(this.cas_url);
   this.request_client = parsed_cas_url.protocol === 'http:' ? http : https;
   this.cas_host = parsed_cas_url.hostname;
-  this.cas_port = options.cas_port || parsed_cas_url.port;
+  this.cas_port = options.casPort || parsed_cas_url.port;
   this.cas_path = parsed_cas_url.pathname ? parsed_cas_url.pathname : '';
-  this.cas_return_to = options.cas_return_to ? options.cas_return_to : '/';
+  this.cas_return_to = options.casReturnTo ? options.casReturnTo : '/';
 
-  this.service_url = options.service_url;
+  this.service_url = options.serviceUrl;
 
-  this.logout_url_suffix = options.logout_url_suffix || '';
+  this.logout_url_suffix = options.logoutUrlSuffix || '';
 
   this.renew = options.renew !== undefined ? !!options.renew : false;
   this.isNeedRenew = options.isNeedRenew || false;
 
-  this.is_dev_mode = options.is_dev_mode !== undefined ? !!options.is_dev_mode : false;
-  this.dev_mode_user = options.dev_mode_user !== undefined ? options.dev_mode_user : '';
-  this.dev_mode_info = options.dev_mode_info !== undefined ? options.dev_mode_info : {};
+  this.is_dev_mode = options.isDevMode !== undefined ? !!options.isDevMode : false;
+  this.dev_mode_user = options.devModeUser !== undefined ? options.devModeUser : '';
+  this.dev_mode_info = options.devModeInfo !== undefined ? options.devModeInfo : {};
 
-  this.session_name = options.session_name !== undefined ? options.session_name : 'cas_user';
-  this.session_info = ['2.0', '3.0', 'saml1.1'].indexOf(this.cas_version) >= 0 && options.session_info !== undefined ? options.session_info : false;
-  this.destroy_session = options.destroy_session !== undefined ? !!options.destroy_session : false;
-  this.is_custom_session = options.is_custom_session || false;
+  this.session_name = options.sessionName !== undefined ? options.sessionName : 'cas_user';
+  this.session_info = ['2.0', '3.0', 'saml1.1'].indexOf(this.cas_version) >= 0 && options.sessionInfo !== undefined ? options.sessionInfo : false;
+  this.destroy_session = options.destroySession !== undefined ? !!options.destroySession : false;
+  this.is_custom_session = options.isCustomSession || false;
 
   // Bind the prototype routing methods to this instance of CASAuthentication.
   this.bounce = this.bounce.bind(this);
