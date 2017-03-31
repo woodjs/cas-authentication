@@ -373,12 +373,13 @@ CASAuthentication.prototype._handleTicket = function (req, res, next) {
             return;
           }
 
-          req.session.upgrade(user, function (err) {
+          req.session.upgrade(req.query.ticket, function (err) {
             if (err) {
               console.log(err);
               res.send({'message': 'upgrade user error!'});
             }
 
+            req.session.ticket = req.query.ticket;
             req.session[this.session_name] = user;
 
             if (this.session_info) {
