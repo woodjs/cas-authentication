@@ -257,7 +257,7 @@ CASAuthentication.prototype._login = function (req, res, next) {
 
   // Set up the query parameters.
   var query = {
-    service: this.service_url + url.parse(req.url).pathname
+    service: this.service_url + url.parse(req.url).pathname + '?redirectUrl=' + encodeURIComponent(req.query.redirectUrl || '')
   };
 
   if (this.isNeedRenew) {
@@ -317,7 +317,7 @@ CASAuthentication.prototype._handleTicket = function (req, res, next) {
     requestOptions.path = url.format({
       pathname: (this.cas_path === '/' ? '' : this.cas_path) + this._validateUri,
       query: {
-        service: this.service_url + url.parse(req.url).pathname,
+        service: this.service_url + url.parse(req.url).pathname + '?redirectUrl=' + encodeURIComponent(req.query.redirectUrl || ''),
         ticket: req.query.ticket
       }
     });
@@ -386,7 +386,7 @@ CASAuthentication.prototype._handleTicket = function (req, res, next) {
               req.session[this.session_info] = attributes || {};
             }
 
-            res.redirect(this.cas_return_to || req.session.cas_return_to);
+            res.redirect(this.cas_return_to ? (this.cas_return_to + '?redirectUrl=' + encodeURIComponent(req.query.redirectUrl || '')) : req.session.cas_return_to);
           }.bind(this));
         }
       }.bind(this));
