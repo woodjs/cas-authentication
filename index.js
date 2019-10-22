@@ -152,6 +152,14 @@ function CASAuthentication(options) {
   this.cas_path = parsed_cas_url.pathname ? parsed_cas_url.pathname : '';
   this.cas_return_to = options.casReturnTo ? options.casReturnTo : '/';
 
+  if (options.casIntranetUrl) {
+    this.cas_intranet_url = options.casIntranetUrl;
+    var parsed_cas_intranet_url = url.parse(this.cas_intranet_url);
+    this.cas_intranet_host = parsed_cas_intranet_url.hostname;
+    this.cas_intranet_port = parsed_cas_intranet_url.port;
+    this.cas_intranet_path = parsed_cas_intranet_url.pathname ? parsed_cas_intranet_url.pathname : '';
+  }
+
   this.service_url = options.serviceUrl;
 
   this.logout_url_suffix = options.logoutUrlSuffix || '';
@@ -305,17 +313,20 @@ CASAuthentication.prototype.logout = function (req, res, next) {
 CASAuthentication.prototype._handleTicket = function (req, res, next) {
 
   var requestOptions = {
-    host: this.cas_host
+    host: this.cas_intranet_host ? this.cas_intranet_host : this.cas_host
   };
 
-  if (this.cas_port) {
-    requestOptions.port = this.cas_port;
+  if (this.cas_intranet_port || this.cas_port) {
+    requestOptions.port = this.cas_intranet_port ? this.cas_intranet_port : this.cas_port;
   }
 
+  var temp_cas_path = this.cas_intranet_path ? this.cas_intranet_path : this.cas_path;
+
   if (['1.0', '2.0', '3.0'].indexOf(this.cas_version) >= 0) {
+
     requestOptions.method = 'GET';
     requestOptions.path = url.format({
-      pathname: (this.cas_path === '/' ? '' : this.cas_path) + this._validateUri,
+      pathname: (temp_cas_path === '/' ? '' : temp_cas_path) + this._validateUri,
       query: {
         service: this.service_url + url.parse(req.url).pathname + '?redirectUrl=' + encodeURIComponent(req.query.redirectUrl || ''),
         ticket: req.query.ticket
@@ -340,7 +351,7 @@ CASAuthentication.prototype._handleTicket = function (req, res, next) {
 
     requestOptions.method = 'POST';
     requestOptions.path = url.format({
-      pathname: (this.cas_path === '/' ? '' : this.cas_path) + this._validateUri,
+      pathname: (temp_cas_path === '/' ? '' : temp_cas_path) + this._validateUri,
       query: {
         TARGET: this.service_url + url.parse(req.url).pathname,
         ticket: ''
